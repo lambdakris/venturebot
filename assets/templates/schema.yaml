@@ -1,0 +1,407 @@
+# Trip Plan Schema
+# Machine-readable specification for mountaineering trip plans
+# This schema defines required and optional sections for validation
+
+version: "1.0"
+description: "Canonical schema for mountaineering trip plans"
+
+# Required top-level sections
+required_sections:
+  - summary
+  - participants
+  - logistics
+  - route
+  - conditions
+  - equipment
+  - emergency
+
+# Optional top-level sections (conditional based on trip type)
+optional_sections:
+  - technical_sections      # For routes with rappels, exposed climbing
+  - bailout_options        # For technical/committed routes
+  - objective_hazards      # Explicit hazard analysis
+  - sources               # Attribution and references
+  - overnight_logistics   # For multi-day trips
+
+# Detailed section schemas
+
+summary:
+  required_fields:
+    - objective              # String: Primary peak(s) and route
+    - type                  # String: Day trip, multi-day, technical, winter, etc.
+    - distance_miles        # Number: Round trip distance
+    - elevation_gain_ft     # Number: Total elevation gain
+    - duration_hours        # String: Estimated duration range (e.g., "6-8")
+  optional_fields:
+    - summit_elevation_ft   # Number: Summit elevation
+    - difficulty            # String: Class rating, grade
+    - season               # String: Current or recommended season
+
+participants:
+  format: table
+  required_columns:
+    - participant_name      # String: Full name
+    - phone_number         # String: Contact number
+    - emergency_contact    # String: Emergency contact name
+    - emergency_phone      # String: Emergency contact number
+  optional_columns:
+    - inreach_address      # String: Garmin inReach email
+
+transportation_logistics:
+  required_fields:
+    carpool:
+      - time               # String: Departure time (HH:MM AM/PM)
+      - location           # String: Meeting point name
+      - link               # URL: Google Maps or similar
+    trailhead:
+      - time               # String: Arrival time (HH:MM AM/PM)
+      - location           # String: Trailhead name
+      - link               # URL: Google Maps, coordinates, or CalTopo
+
+route:
+  required_subsections:
+    - map                  # URL: CalTopo or other mapping service
+    - overview             # Text: High-level route description
+    - detailed_plan        # Table: Segment-by-segment breakdown
+
+  detailed_plan:
+    format: table
+    required_columns:
+      - segment            # String: Segment name/description
+      - destination        # String: Waypoint name and/or coordinates
+      - distance           # String: Segment distance
+      - elevation_change   # String: +/- elevation for segment
+      - description        # String: Brief segment description
+      - est_duration       # String: Estimated time for segment
+      - start_time         # String: Expected start time
+      - end_time          # String: Expected end time
+
+  timing:
+    required_fields:
+      - sunrise            # String: HH:MM AM
+      - sunset             # String: HH:MM PM
+      - turnaround_time    # String: Hard turnaround time
+    optional_fields:
+      - weather_window     # String: When weather typically deteriorates
+      - sunhit            # String: When sun hits key terrain
+
+  optional_subsections:
+    - technical_details    # For complex routes
+    - bailout_options     # Escape routes
+
+conditions:
+  required_subsections:
+    - weather_forecast     # Links and summary
+
+  weather_forecast:
+    required_fields:
+      - links              # List of URLs (NOAA, Mountain Forecast, etc.)
+      - summary           # String: Key weather concerns
+
+  conditional_subsections:
+    avalanche_forecast:    # Required for winter/spring snow routes
+      required_fields:
+        - links            # URL: CAIC or equivalent
+        - risk_level       # String: Low, Moderate, Considerable, High, Extreme
+        - problems         # List: Wind slab, persistent slab, wet loose, etc.
+        - key_concerns     # String: Specific hazards for route
+
+    recent_conditions:     # Optional but recommended
+      optional_fields:
+        - trip_reports     # URLs to recent reports
+        - beta_sources     # Other condition sources
+
+equipment:
+  required_subsections:
+    - personal_gear        # Per-person gear list
+    - group_gear          # Shared equipment
+
+  personal_gear:
+    required_categories:
+      - general            # 10 essentials + basic gear
+
+    general_required:     # Core items for any trip
+      - backpack
+      - clothing_layers
+      - footwear
+      - navigation
+      - headlamp
+      - sun_protection
+      - first_aid
+      - knife_tool
+      - fire_starter
+      - emergency_shelter
+      - food
+      - water
+
+    conditional_categories:
+      winter_snow:         # For winter/spring snow routes
+        - crampons
+        - ice_axe
+        - helmet
+        - goggles
+        - avalanche_transceiver
+        - probe
+        - shovel
+        - snowshoes        # May be optional
+        - insulated_bottles
+
+      technical_rock:      # For technical climbing
+        - helmet
+        - harness
+        - rappel_device
+        - locking_carabiners
+        - friction_hitch
+        - gloves
+
+      overnight:          # For multi-day trips
+        - tent
+        - sleeping_bag
+        - sleeping_pad
+        - stove
+        - cooking_gear
+
+  group_gear:
+    required_items:
+      - first_aid_kit      # Comprehensive group kit
+      - communication      # Satellite messenger, cell phone
+
+    conditional_items:
+      - rope               # For technical routes
+      - anchor_material    # For routes with rappels
+      - repair_kit         # Recommended for longer trips
+
+emergency_information:
+  required_subsections:
+    - emergency_action_plan    # Step-by-step procedures
+    - emergency_contacts       # Table of relevant contacts
+
+  emergency_action_plan:
+    required_steps:          # Ordered list of actions
+      - scene_safety
+      - first_aid
+      - determine_location
+      - call_for_help
+      - provide_information
+      - stay_put
+
+  emergency_contacts:
+    format: table
+    required_rows:
+      - emergency_911          # 911 service
+      - dispatch              # County sheriff non-emergency
+      - medical               # Nearest hospital with address
+      - overdue_contact       # Who to call if team overdue
+
+    required_columns:
+      - service               # Type of service
+      - agency_contact        # Agency or contact person name
+      - phone_number         # Contact number
+      - notes                # Additional info (address, links, etc.)
+
+  optional_subsections:
+    - overdue_protocol       # Detailed overdue procedures
+    - jurisdiction_info      # County/SAR coordination details
+
+# Conditional sections based on trip type
+
+technical_sections:
+  applies_when:
+    - trip type includes "technical"
+    - route involves rappels
+    - route involves exposed climbing
+
+  examples:
+    - rappel_procedure       # Step-by-step rappel instructions
+    - climbing_beta          # Specific technical beta
+    - anchor_information     # Details on anchors
+
+bailout_options:
+  applies_when:
+    - trip type is "technical"
+    - route is "committed"
+    - route is "winter"
+
+  format: list
+  required_per_bailout:
+    - location             # Where bailout is possible
+    - description          # When and how to use
+    - conditions           # When this bailout is appropriate
+
+objective_hazards:
+  applies_when:
+    - significant hazards present
+    - user wants explicit hazard analysis
+
+  format: list
+  required_per_hazard:
+    - hazard_type          # Name of hazard
+    - description          # Explanation
+    - mitigation           # How to mitigate/manage
+
+sources:
+  optional_section: true
+  format: list
+  items: URLs to trip reports, route descriptions, beta sources
+
+# Formatting and style guidelines
+
+formatting_rules:
+  tables:
+    - Use markdown table format
+    - Include header row
+    - Align columns for readability
+
+  links:
+    - All URLs should be actual links, not plain text
+    - Prefer descriptive link text over bare URLs
+
+  times:
+    - Use 12-hour format with AM/PM
+    - Be specific (not "morning" but "6:30 AM")
+
+  numbers:
+    - Include units (ft, mi, degrees)
+    - Be precise (not "about 10 miles" but "10.2 mi")
+
+  coordinates:
+    - Use decimal degrees format (39.58938, -105.64441)
+    - Include coordinates for key waypoints
+
+  emphasis:
+    - Use **bold** for critical information
+    - Use tables for structured data
+    - Use lists for procedures and checklists
+
+# Validation criteria for DSPy evaluators
+
+validation_criteria:
+  completeness:
+    - All required sections present
+    - All required fields within sections populated
+    - Conditional sections included when applicable (e.g., avalanche forecast for winter trips)
+
+  accuracy:
+    - Elevation numbers reasonable for location
+    - Times follow logical sequence
+    - Distances and durations aligned
+    - Weather links point to correct location
+
+  safety:
+    - Emergency information complete
+    - At least one participant has emergency contact
+    - Turnaround time specified
+    - Hazards identified and mitigated
+
+  specificity:
+    - Specific times (not vague)
+    - Specific elevations and distances
+    - Specific gear for conditions
+    - Specific weather concerns addressed
+
+  formatting:
+    - Tables properly formatted
+    - Links functional
+    - Consistent structure
+    - Readable and scannable
+
+# Trip type characteristics (for conditional logic)
+
+trip_types:
+  day_trip:
+    characteristics:
+      - Single day duration
+      - No overnight gear required
+      - Return to trailhead same day
+
+  multi_day:
+    characteristics:
+      - Multiple days/nights
+      - Requires overnight gear
+      - May include camping logistics
+    required_additional_sections:
+      - overnight_logistics
+
+  winter:
+    characteristics:
+      - Snow/ice conditions
+      - Cold temperatures
+      - Avalanche potential
+    required_additional_sections:
+      - avalanche_forecast
+    required_equipment:
+      - winter_snow_gear
+
+  spring_snow:
+    characteristics:
+      - Snow climbing
+      - Warming temperatures
+      - Wet avalanche potential
+    required_additional_sections:
+      - avalanche_forecast
+    required_equipment:
+      - winter_snow_gear
+
+  technical:
+    characteristics:
+      - Class 4+ climbing
+      - Exposure
+      - May require ropes/technical gear
+    recommended_sections:
+      - technical_sections
+      - bailout_options
+    required_equipment:
+      - technical_rock_gear (if rock)
+      - technical_snow_gear (if snow/ice)
+
+  rock_scramble:
+    characteristics:
+      - Class 3-4 terrain
+      - Moderate exposure
+      - Non-technical but challenging
+    recommended_sections:
+      - bailout_options
+
+# Quality scoring rubric (for DSPy optimization)
+
+quality_dimensions:
+  safety:
+    weight: 0.35
+    criteria:
+      - Emergency information complete and accurate
+      - Hazards identified and mitigated
+      - Appropriate gear for conditions
+      - Realistic turnaround times
+      - Participant emergency contacts present
+
+  completeness:
+    weight: 0.25
+    criteria:
+      - All required sections present
+      - Conditional sections included when needed
+      - Sufficient detail in each section
+      - No placeholder text (e.g., "TBD", "wip")
+
+  accuracy:
+    weight: 0.20
+    criteria:
+      - Numbers are realistic and consistent
+      - Times follow logical sequence
+      - Distances/elevations match known data
+      - Weather sources correct for location
+
+  specificity:
+    weight: 0.15
+    criteria:
+      - Specific times, not vague
+      - Specific gear recommendations
+      - Specific route beta
+      - Specific hazard mitigation
+
+  usability:
+    weight: 0.05
+    criteria:
+      - Well-formatted and scannable
+      - Tables used appropriately
+      - Clear section headers
+      - Functional links

@@ -1,0 +1,25 @@
+- Snow Ridge Climbs
+    - Sherman
+        - starter: https://www.14ers.com/route.php?route=sher3
+    - Yale
+        - starter: https://www.14ers.com/route.php?route=yale2
+    - Antero
+        - starter: https://www.14ers.com/route.php?route=ante1
+    - Princeton
+        - starter: 
+    - Silverheels
+        - starter: https://www.14ers.com/route.php?route=201201050806033
+    - Clinton/McNamee/Traver
+        - starter: https://www.14ers.com/route.php?route=clin9
+    - Kuss/Mosquito/Treasurevault
+        - starter: https://www.14ers.com/route.php?route=201501240704403
+    - Gray Wolf
+	    - [Gray Wolf Mountain Trip Report 05/24/2022 | 14ers.com](https://www.14ers.com/php14ers/tripreport.php?trip=21638)
+    - Mount Lady Washington
+        - 
+- Snow Couloir Climbs
+	- sayres benchmark
+	- cristo couloir
+	- whales tail
+	- boudoir
+	- juliet - neva

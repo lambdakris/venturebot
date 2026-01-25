@@ -1,0 +1,23 @@
+- trailhead:
+    - name: Avalanche Trailhead
+      summary:
+        location: Near Buena Vista, CO
+        elevation: 9,200 ft
+        access: Accessible via gravel road from Highway 24
+      seasons:
+        summer: open
+        winter: open
+      objectives:
+        - Yale
+      sources:
+    - name: Cottonwood Creek Trailhead
+      summary:
+        location: Near Buena Vista, CO
+        elevation: 9,400 ft
+        access: Accessible via paved road from Highway 24
+      seasons:
+        summer: open
+        winter: closed
+      objectives:
+        - Yale
+      sources:

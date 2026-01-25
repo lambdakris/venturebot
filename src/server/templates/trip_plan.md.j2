@@ -1,0 +1,194 @@
+---
+trip:
+  title: "{{ plan.title }}"
+  date: "{{ plan.date }}"
+  objective: "{{ plan.objective }}"
+  type: "{{ plan.trip_type }}"
+
+metrics:
+  distance_miles: {{ plan.metrics.distance_miles }}
+  elevation_gain_ft: {{ plan.metrics.elevation_gain_ft }}
+  elevation_summit_ft: {{ plan.metrics.elevation_summit_ft }}
+  elevation_trailhead_ft: {{ plan.metrics.elevation_trailhead_ft }}
+  duration_hours: "{{ plan.metrics.duration_hours }}"
+
+location:
+  county: "{{ plan.county }}"
+  area: "{{ plan.area }}"
+
+trailhead:
+  name: "{{ plan.trailhead_name }}"
+  location: "{{ plan.trailhead_location }}"
+  arrival_time: "{{ plan.trailhead_time }}"
+
+carpool:
+  name: "{{ plan.carpool_name }}"
+  location: "{{ plan.carpool_location }}"
+  departure_time: "{{ plan.carpool_time }}"
+
+timing:
+  sunrise: "{{ plan.sunrise }}"
+  sunset: "{{ plan.sunset }}"
+  turnaround_time: "{{ plan.turnaround_time }}"
+{% if plan.avalanche %}
+
+avalanche:
+  forecast_link: "{{ plan.avalanche.forecast_link }}"
+  risk_level: "{{ plan.avalanche.risk_level }}"
+  problems:
+{% for problem in plan.avalanche.problems %}
+      - {{ problem }}
+{% endfor %}
+  key_concerns: "{{ plan.avalanche.key_concerns }}"
+{% endif %}
+---
+
+# {{ plan.title }}
+
+## Summary
+
+**Objective:** {{ plan.objective }}
+
+**Type:** {{ plan.trip_type }}
+
+**Key Details:**
+- **Distance:** {{ plan.metrics.distance_miles }} miles round trip
+- **Elevation Gain:** {{ "{:,}".format(plan.metrics.elevation_gain_ft) }} ft
+- **Summit Elevation:** {{ "{:,}".format(plan.metrics.elevation_summit_ft) }} ft
+- **Estimated Duration:** {{ plan.metrics.duration_hours }} hours
+- **Difficulty:** {{ plan.difficulty }}
+
+{{ plan.summary }}
+
+## Participants
+
+| Participant | Phone | Emergency Contact | Emergency Phone |
+|-------------|-------|-------------------|-----------------|
+{% if plan.participants %}
+{% for p in plan.participants %}
+| {{ p.name }} | {{ p.phone }} | {{ p.emergency_contact }} | {{ p.emergency_phone }} |
+{% endfor %}
+{% else %}
+| TBD | | | |
+{% endif %}
+
+## Transportation & Logistics
+
+**Carpool:**
+- Time: {{ plan.carpool_time }}
+- Name: {{ plan.carpool_name }}
+- Location: {{ plan.carpool_location }}
+
+**Trailhead:**
+- Time: {{ plan.trailhead_time }}
+- Name: {{ plan.trailhead_name }}
+- Location: {{ plan.trailhead_location }}
+
+## Route
+
+### Map
+
+{{ plan.route_map_link }}
+
+### Overview
+
+{{ plan.route_overview }}
+
+### Detailed Route Plan
+
+**Timing:**
+- Sunrise: {{ plan.sunrise }}
+- Sunset: {{ plan.sunset }}
+- Turnaround Time: {{ plan.turnaround_time }}
+
+| Segment | Destination | Distance | Elevation | Description | Duration | Start | End |
+|---------|-------------|----------|-----------|-------------|----------|-------|-----|
+{% for seg in plan.route_segments %}
+| {{ seg.segment }} | {{ seg.destination }} | {{ seg.distance }} | {{ seg.elevation_change }} | {{ seg.description }} | {{ seg.duration }} | {{ seg.start_time }} | {{ seg.end_time }} |
+{% endfor %}
+
+## Conditions
+
+### Weather Forecast
+
+**Links:**
+{% for link in plan.weather.forecast_links %}
+- {{ link }}
+{% endfor %}
+
+**Summary:** {{ plan.weather.summary }}
+{% if plan.avalanche %}
+
+### Avalanche Forecast
+
+**Link:** {{ plan.avalanche.forecast_link }}
+
+**Summary:**
+- Overall Risk: {{ plan.avalanche.risk_level }}
+- Problems: {{ plan.avalanche.problems | join(", ") }}
+- Key Concerns: {{ plan.avalanche.key_concerns }}
+{% endif %}
+
+## Equipment
+
+### Personal Gear
+
+{% for item in plan.personal_gear %}
+- {{ item }}
+{% endfor %}
+
+### Group Gear
+
+{% for item in plan.group_gear %}
+- {{ item }}
+{% endfor %}
+{% if plan.winter_gear %}
+
+### Winter Gear
+
+{% for item in plan.winter_gear %}
+- {{ item }}
+{% endfor %}
+{% endif %}
+{% if plan.technical_gear %}
+
+### Technical Gear
+
+{% for item in plan.technical_gear %}
+- {{ item }}
+{% endfor %}
+{% endif %}
+
+## Emergency Information
+
+### Emergency Action Plan
+
+{{ plan.emergency_action_plan }}
+
+### Emergency Contacts
+
+| Service | Agency | Phone | Notes |
+|---------|--------|-------|-------|
+{% for c in plan.emergency_contacts %}
+| {{ c.service }} | {{ c.agency }} | {{ c.phone }} | {{ c.notes }} |
+{% endfor %}
+
+**County/Jurisdiction:** {{ plan.county }}
+{% if plan.technical_sections %}
+
+## Technical Sections
+
+{{ plan.technical_sections }}
+{% endif %}
+{% if plan.bailout_options %}
+
+## Bailout Options
+
+{{ plan.bailout_options }}
+{% endif %}
+{% if plan.objective_hazards %}
+
+## Objective Hazards
+
+{{ plan.objective_hazards }}
+{% endif %}

@@ -1,0 +1,13 @@
+- routes:
+    - name: Mount Yale East Ridge
+      summary:
+        summer: rocky
+        winter: snowy
+      trailheads:
+        - name: Avalanche Creek Trailhead
+    - name: Mount Yale Southwest Slopes
+      summary:
+            summer: grassy
+            winter: icy
+      trailheads:
+            - name: Denny Creek Trailhead
