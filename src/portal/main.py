@@ -3,6 +3,7 @@
 import os
 
 import streamlit as st
+from typing import cast, Any
 from pydantic import BaseModel
 
 from client import MtnBotClient
@@ -91,7 +92,7 @@ def main():
             title = state.plan_data.get("title", "trip_plan")
             st.download_button(
                 label="Download .md",
-                data=state.plan_text,
+                data=str(state.plan_text),
                 file_name=f"{title.replace(' ', '_')}.md",
                 mime="text/markdown",
             )
