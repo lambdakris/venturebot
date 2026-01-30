@@ -11,7 +11,6 @@ app = FastAPI(
 
 app.include_router(router)
 
-
 @app.get("/healthz")
 def health_check() -> dict:
     """Health check endpoint."""

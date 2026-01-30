@@ -23,7 +23,7 @@ class MtnBotClient:
             trip_request: Natural language trip planning request
 
         Returns:
-            Dict with 'plan' (structured) and 'markdown' (rendered) keys
+            Dict with 'plan_data' (structured) and 'plan_text' (rendered) keys
 
         Raises:
             httpx.HTTPStatusError: If the API returns an error status

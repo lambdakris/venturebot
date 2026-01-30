@@ -30,12 +30,12 @@ def generate_plan(request: GeneratePlanRequest) -> GeneratePlanResponse:
     try:
         result = agent(trip_request=request.trip_request)
 
-        trip_plan_data = result.trip_plan
-        trip_plan_text = render_to_markdown(trip_plan_data)
+        plan_data = result.trip_plan
+        plan_text = render_to_markdown(plan_data)
 
         return GeneratePlanResponse(
-            trip_plan_data=trip_plan_data, 
-            trip_plan_text=trip_plan_text
+            plan_data=plan_data, 
+            plan_text=plan_text
         )
 
     except Exception as e:

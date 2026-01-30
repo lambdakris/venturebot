@@ -17,8 +17,8 @@ class GeneratePlanRequest(BaseModel):
 class GeneratePlanResponse(BaseModel):
     """Response body containing the generated trip plan."""
 
-    trip_plan_data: TripPlan = Field(description="Structured trip plan")
-    trip_plan_text: str = Field(description="Rendered markdown representation of the plan")
+    plan_data: TripPlan = Field(description="Structured trip plan")
+    plan_text: str = Field(description="Rendered markdown representation of the plan")
 
 
 class ErrorResponse(BaseModel):

@@ -1,11 +1,9 @@
 """Streamlit app for MtnBot trip planner."""
 
 import os
-
 import streamlit as st
 from typing import cast, Any
 from pydantic import BaseModel
-
 from client import MtnBotClient
 
 
@@ -68,8 +66,8 @@ def main():
             try:
                 result = client.generate_plan(trip_request)
 
-                state.plan_data = result["data"]
-                state.plan_text = result["text"]
+                state.plan_data = result["plan_data"]
+                state.plan_text = result["plan_text"]
                 state.error = None
 
             except Exception as e:
